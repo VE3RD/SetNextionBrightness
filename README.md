@@ -1,7 +1,7 @@
 # SetNextionBrightness
 
-#  This script requires the installation of sunwait
-#  Installation:    
+  This script requires the installation of sunwait
+  Installation:    
 sudo apt-get install sunwait
 cd sunwait
 rpi-rw
