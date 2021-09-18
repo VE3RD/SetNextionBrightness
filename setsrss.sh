@@ -17,6 +17,9 @@ ver="20210913"
 
 dval=99
 nval=10
+Mode=0
+#Mode=1 //wait for sunrise
+#Mode=2 //wait for sunset
 
 sudo mount -o remount,rw /
 
@@ -30,7 +33,15 @@ fi
 
 echo "$lat  /  $lon"
 
-dn=$(sudo /home/pi-star/sunwait/sunwait poll "$lat" "$lon")
+if [ "$Mode" == 1 ]; then
+	dn=$(sudo /home/pi-star/sunwait/sunwait wait rise "$lat" "$lon")
+elif [ "$Mode" == 2 ]; then
+	dn=$(sudo /home/pi-star/sunwait/sunwait wait set "$lat" "$lon")
+else
+	dn=$(sudo /home/pi-star/sunwait/sunwait poll "$lat" "$lon")
+fi
+
+
 
 if [ "$dn" == "DAY" ]; then 
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
