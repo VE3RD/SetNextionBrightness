@@ -18,9 +18,6 @@ syntax:   ./setsrss.sh     // will use the location values in /etc/mmdvmhost
 syntax:   ./setsrss.sh  43.000N 79.000W   // will use the provided gps coordinates
 
 Cron Usage
-01 00 * * * /home/pi-star/SetNextionBrightness/setsrss.sh 
-//This line executes at at one minute after midnight, waits until the start of civil twilight at the location specified, then runs the 
-//command /home/pi-star/SetNextionBrightness/setsrss.sh with no parameters (MMDVMHost Location).
 
 /* 3 * * *   root /home/pi-star/SetNextionBrightness/setsrss.sh 1
 This will run the script at 3am. The script will wait until dawn to raise the screen brightness
