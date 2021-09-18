@@ -21,8 +21,8 @@ Cron Usage
 //This line executes at at one minute after midnight, waits until the start of civil twilight at the location specified, then runs the 
 //command /home/pi-star/SetNextionBrightness/setsrss.sh with no parameters (MMDVMHost Location).
 
-* 3 * * *   root /home/pi-star/SetNextionBrightness/setsrss.sh 1
+/* 3 * * *   root /home/pi-star/SetNextionBrightness/setsrss.sh 1
 This will run the script at 3am. The script will wait until dawn to raise the screen brightness
 
-* 16 * * * root /home/pi-star/SetNextionBrightness/setsrss.sh 2
+/* 16 * * * root /home/pi-star/SetNextionBrightness/setsrss.sh 2
 This will run the script at 4pm. The script will wait until sunset to lower the screen brightness
