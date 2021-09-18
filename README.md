@@ -20,8 +20,8 @@ syntax:   ./setsrss.sh  43.000N 79.000W   // will use the provided gps coordinat
 
 Cron Usage
 
-#* 3 * * *   root /home/pi-star/SetNextionBrightness/setsrss.sh 1
+#* 3 * * *   root /home/pi-star/SetNextionBrightness/setsrss.sh 1          
 #This will run the script at 3am. The script will wait until dawn to raise the screen brightness
 
-#* 16 * * * root /home/pi-star/SetNextionBrightness/setsrss.sh 2
+#* 16 * * * root /home/pi-star/SetNextionBrightness/setsrss.sh 2             
 #This will run the script at 4pm. The script will wait until sunset to lower the screen brightness
