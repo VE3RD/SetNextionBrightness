@@ -9,19 +9,22 @@ cd sunwait
 rpi-rw
 sudo cp sunwait /usr/local/bin/
 
+Modify The 'calls' and 'apik' parameters in aprsquery.php with your parameters
+
 This Script will set the Nextion Screen Brightness high or low (values are set in the script)      
 dval=99  ## Daytime Value of [Nextion] Brightness and IdleBrightness     
 nval=10  ## Night time Value of [Nextion] Brightness and IdleBrightness     
 
-Either the Lat/Long provided as a parameter ot the MMDVMHost location will be used to find the sunrise/sunset times
+the aprsquery.php script will query aprs.fi for the current location of a APRS Station
+the ./setsrss.sh script will use that location to detect DAY or Night based on Sunrise and Sunset Times
+It will thne modify the screen brightness parameterts in the /etc/mmdvmhost config file
+then restart MMDVMHost to pickup the changes
 
-syntax:   ./setsrss.sh     // will use the location values in /etc/mmdvmhost      
-syntax:   ./setsrss.sh  43.000N 79.000W   // will use the provided gps coordinates    
 
 Cron Usage
 
-#* 3 * * *   root /home/pi-star/SetNextionBrightness/setsrss.sh 1          
-#This will run the script at 3am. The script will wait until dawn to raise the screen brightness
+#*/30 * * * *   root /home/pi-star/SetNextionBrightness/setsrss.sh          
+#This will run the script every 30 minutes. The script will detect DAY or NIGHT 
+#and set the Screen Brightness if it changes from Day to Night or Night to Day
 
-#* 16 * * * root /home/pi-star/SetNextionBrightness/setsrss.sh 2             
-#This will run the script at 4pm. The script will wait until sunset to lower the screen brightness
+
