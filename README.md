@@ -4,10 +4,10 @@
   This script requires the installation of sunwait
   
   Installation:    
-sudo apt-get install sunwait
-cd sunwait
-rpi-rw
-sudo cp sunwait /usr/local/bin/
+sudo apt-get install sunwait        
+cd sunwait              
+rpi-rw           
+sudo cp sunwait /usr/local/bin/          
 
 
   This script requires a user access token from APRS.FI
