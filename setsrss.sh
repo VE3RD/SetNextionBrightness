@@ -31,15 +31,24 @@ echo "Location: $latlon"
 
 DN=$(/home/pi-star/sunwait/sunwait -poll "$lat" "$lon")
 echo "DN: $DN"
+if [ -f /home/pi-star/DN.txt ]; then
+   line=$(head -n 1 /home/pi-star/DN.txt)
+	if [ "$line" == "$DN" ]; then
+		echo "No Change"
+		exit
+	fi
+else
+   echo "$DN" >/home/pi-star/DN.txt
 
+fi
 if [ "$DN" == "DAY" ]; then 
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
         sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
-	echo "$dn Set BL=$dval"
+	echo "Setting Brightness=$dval"
 
 else
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$nval"'/m;P;d'  /etc/mmdvmhost
         sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$nval"'/m;P;d'  /etc/mmdvmhost
-	echo "$dn Set BL=$nval"
+	echo "Setting Brightness=$nval"
 fi
 sudo mmdvmhost.service restart &> null
