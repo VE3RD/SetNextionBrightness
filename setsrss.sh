@@ -13,7 +13,7 @@
 #
 #set -o errexit
 #set -o pipefail
-ver="20210913"
+ver="20211007"
 
 dval=99
 nval=10
@@ -23,27 +23,16 @@ Mode=0
 
 sudo mount -o remount,rw /
 
-if [ -z "$2" ]; then
-	lat=$(sed -nr "/^\[Info\]/ { :l /^Latitude[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/mmdvmhost)N
-	lon=$(sed -nr "/^\[Info\]/ { :l /^Longitude[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/mmdvmhost)W
-else
-	lat="$1"
-	lon="$2"
-fi
+latlon=$(./aprsquery.php)
+lat=$(echo "$latlon" | cut -d ' ' -f1)W
+lon=$(echo "$latlon" | cut -d ' ' -f2)N
 
-echo "$lat  /  $lon"
+echo "Location: $latlon"
 
-if [ "$Mode" == 1 ]; then
-	dn=$(sudo /home/pi-star/sunwait/sunwait wait rise "$lat" "$lon")
-elif [ "$Mode" == 2 ]; then
-	dn=$(sudo /home/pi-star/sunwait/sunwait wait set "$lat" "$lon")
-else
-	dn=$(sudo /home/pi-star/sunwait/sunwait poll "$lat" "$lon")
-fi
+DN=$(/home/pi-star/sunwait/sunwait -poll "$lat" "$lon")
+echo "DN: $DN"
 
-
-
-if [ "$dn" == "DAY" ]; then 
+if [ "$DN" == "DAY" ]; then 
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
         sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
 	echo "$dn Set BL=$dval"

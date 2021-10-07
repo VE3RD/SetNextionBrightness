@@ -9,7 +9,20 @@ cd sunwait
 rpi-rw
 sudo cp sunwait /usr/local/bin/
 
-Modify The 'calls' and 'apik' parameters in aprsquery.php with your parameters
+
+  This script requires a user access token from APRS.FI
+        Log in to APRS.fi
+        Scroll down to  Preferences - My account
+
+        Click on My account
+        Put the API Key onto your cut/paste buffer
+
+        It should look something like this 00000.AAAAAAAAAAAAAA
+	Open aprsquery.php
+	and paste it at the apik parameter
+
+
+Modify The 'calls' parameter in aprsquery.php with the aprs station id you want to track
 
 This Script will set the Nextion Screen Brightness high or low (values are set in the script)      
 dval=99  ## Daytime Value of [Nextion] Brightness and IdleBrightness     
