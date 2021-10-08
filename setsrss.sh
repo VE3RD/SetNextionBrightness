@@ -29,6 +29,15 @@ lon=$(echo "$latlon" | cut -d ' ' -f2)N
 
 echo "Location: $latlon"
 
+
+ daym=$(sed -nr "/^\[General\]/ { :l /^Day[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
+ nightm=$(sed -nr "/^\[General\]/ { :l /^Night[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
+ call=$(sed -nr "/^\[General\]/ { :l /^Call[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
+ apik=$(sed -nr "/^\[General\]/ { :l /^ApiKey[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
+
+echo "$daym $nightm"
+
+ 
 DN=$(/home/pi-star/sunwait/sunwait -poll "$lat" "$lon")
 echo "DN: $DN"
 if [ -f /home/pi-star/DN.txt ]; then
