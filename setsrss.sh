@@ -24,10 +24,11 @@ Mode=0
 sudo mount -o remount,rw /
 
 latlon=$(./aprsquery.php)
-lat=$(echo "$latlon" | cut -d ' ' -f1)W
-lon=$(echo "$latlon" | cut -d ' ' -f2)N
+lat=$(echo "$latlon" | cut -d ' ' -f1)N
+lon=$(echo "$latlon" | cut -d ' ' -f2 | tr -d - )W 
 
 echo "Location: $latlon"
+echo "Location: $lat $lon"
 
 
  daym=$(sed -nr "/^\[General\]/ { :l /^Day[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
