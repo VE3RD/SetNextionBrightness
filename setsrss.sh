@@ -47,10 +47,11 @@ if [ -f /home/pi-star/DN.txt ]; then
 		echo "No Change"
 		exit
 	fi
-else
-   echo "$DN" >/home/pi-star/DN.txt
 
 fi
+   
+echo "$DN" >/home/pi-star/DN.txt
+
 if [ "$DN" == "DAY" ]; then 
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
         sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
