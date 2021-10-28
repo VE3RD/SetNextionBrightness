@@ -26,9 +26,10 @@ sudo mount -o remount,rw /
 latlon=$(./aprsquery.php)
 lat=$(echo "$latlon" | cut -d ' ' -f1)N
 lon=$(echo "$latlon" | cut -d ' ' -f2 | tr -d - )W 
+lmode=$(echo "$latlon" | cut -d ' ' -f3)
 
-echo "Location: $latlon"
-echo "Location: $lat $lon"
+#echo "Location: $latlon"
+echo "Location: $lat $lon  Mode=$lmode"
 
 
  daym=$(sed -nr "/^\[General\]/ { :l /^Day[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
@@ -36,7 +37,7 @@ echo "Location: $lat $lon"
  call=$(sed -nr "/^\[General\]/ { :l /^Call[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
  apik=$(sed -nr "/^\[General\]/ { :l /^ApiKey[ ]*=/ { s/.*=[ ]*//; p; q;}; n; b l;}" /etc/nextionbrightness)
 
-echo "$daym $nightm"
+echo "Setting Day=$daym or Night=$nightm"
 
  
 DN=$(/home/pi-star/sunwait/sunwait -poll "$lat" "$lon")
