@@ -12,5 +12,7 @@ else
 	echo "sunwait previously installed"
 fi
 sleep 3
+cd /home/pi-star/SetNextionBrightness
 nano /etc/nextionbrightness
 echo "run  ./setsrss.sh"
+sudo ./setsrss.sh

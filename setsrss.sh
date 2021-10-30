@@ -17,9 +17,6 @@ ver="20211007"
 
 dval=99
 nval=10
-Mode=0
-#Mode=1 //wait for sunrise
-#Mode=2 //wait for sunset
 
 sudo mount -o remount,rw /
 
@@ -52,15 +49,18 @@ if [ -f /home/pi-star/DN.txt ]; then
 fi
    
 echo "$DN" >/home/pi-star/DN.txt
-
-if [ "$DN" == "DAY" ]; then 
+y=`echo "\`date +%N\` / 100000" | bc`
+sudo touch /var/log/pi-star/Nextion-Brightness-Adjusted/log
+if [ "$DN" == "DAY" ]; then
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
         sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
-	echo "Setting Brightness=$dval"
-
+        echo "Setting Brightness=$dval"
+        echo "$y Setting Brightness to $dval" >> /var/log/pi-star/Nextion-Brightness-Adjusted/log
 else
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$nval"'/m;P;d'  /etc/mmdvmhost
         sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$nval"'/m;P;d'  /etc/mmdvmhost
-	echo "Setting Brightness=$nval"
+        echo "Setting Brightness=$nval"
+        echo "$y Setting Brightness to $dval" >> /var/log/pi-star/Nextion-Brightness-Adjusted/log
 fi
+
 sudo mmdvmhost.service restart &> null
