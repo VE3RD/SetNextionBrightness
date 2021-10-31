@@ -8,21 +8,30 @@
 #  VE3RD                                      2021/09/17   	#
 #################################################################
 #
-#  This script requires the installation of sunwait
-#  Installation:    "sudo apt-get install sunwait"
 #
 #set -o errexit
 #set -o pipefail
-ver="20211007"
+ver="20211031"
 
-dval=99
-nval=10
+latlon=$(/home/pi-star/SetNextionBrightness/aprsquery.php)
+lat1=$(echo "$latlon" | cut -d ' ' -f1)
+lon1=$(echo "$latlon" | cut -d ' ' -f2)
+lat2="${lat1:0:1}" 
+lon2="${lon1:0:1}"
 
-sudo mount -o remount,rw /
+if [ "$lat2" == "-" ]; then
+	lat=$(echo "$lat1" | tr -d - )S 
+ else
+	lat=$(echo "$lat1" | tr -d - )N
 
-latlon=$(./aprsquery.php)
-lat=$(echo "$latlon" | cut -d ' ' -f1)N
-lon=$(echo "$latlon" | cut -d ' ' -f2 | tr -d - )W 
+fi
+if [ "$lon2" == "-" ]; then
+	lon=$(echo "$lon1" | tr -d - )W 
+ else
+	lon=$(echo "$lon1" | tr -d - )E
+
+fi
+
 lmode=$(echo "$latlon" | cut -d ' ' -f3)
 
 #echo "Location: $latlon"
@@ -36,31 +45,33 @@ echo "Location: $lat $lon  Mode=$lmode"
 
 echo "Setting Day=$daym or Night=$nightm"
 
+y=$(date '+%Y-%m-%d %H:%M:%S')
  
 DN=$(/home/pi-star/sunwait/sunwait -poll "$lat" "$lon")
-echo "DN: $DN"
+echo "$y DN: $DN"
 if [ -f /home/pi-star/DN.txt ]; then
    line=$(head -n 1 /home/pi-star/DN.txt)
 	if [ "$line" == "$DN" ]; then
 		echo "No Change"
+#		sudo mount -o remount,ro /
 		exit
 	fi
-
 fi
    
 echo "$DN" >/home/pi-star/DN.txt
-y=`echo "\`date +%N\` / 100000" | bc`
 sudo touch /var/log/pi-star/Nextion-Brightness-Adjusted.log
+sudo mount -o remount,rw /
 if [ "$DN" == "DAY" ]; then
-        sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
-        sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$dval"'/m;P;d'  /etc/mmdvmhost
-        echo "Setting Brightness=$dval"
-        echo "$y Setting Brightness to $dval" >> /var/log/pi-star/Nextion-Brightness-Adjusted.log
+        sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$daym"'/m;P;d'  /etc/mmdvmhost
+        sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$daym"'/m;P;d'  /etc/mmdvmhost
+        echo "$y Setting Brightness=$daym"
+        echo "$y Setting Brightness to $daym" >> /var/log/pi-star/Nextion-Brightness-Adjusted.log
 else
-        sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$nval"'/m;P;d'  /etc/mmdvmhost
-        sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$nval"'/m;P;d'  /etc/mmdvmhost
-        echo "Setting Brightness=$nval"
-        echo "$y Setting Brightness to $dval" >> /var/log/pi-star/Nextion-Brightness-Adjusted.log
+        sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$nightm"'/m;P;d'  /etc/mmdvmhost
+        sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$nightm"'/m;P;d'  /etc/mmdvmhost
+        echo "$y Setting Brightness=$nightm"
+        echo "$y Setting Brightness to $nightm" >> /var/log/pi-star/Nextion-Brightness-Adjusted.log
 fi
-
+sleep 2
+sudo mount -o remount,ro /
 sudo mmdvmhost.service restart &> null
