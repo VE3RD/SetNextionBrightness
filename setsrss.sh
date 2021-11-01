@@ -13,6 +13,14 @@
 #set -o pipefail
 ver="20211031"
 
+sudo mount -o remount,rw /
+
+lc=$(wc -l < /var/log/pi-star/Nextion-Brightness-Adjusted.log)
+if [ "$lc" -gt 10 ]; then
+ sed -i '1d' /var/log/pi-star/Nextion-Brightness-Adjusted.log
+ fi
+
+
 latlon=$(/home/pi-star/SetNextionBrightness/aprsquery.php)
 lat1=$(echo "$latlon" | cut -d ' ' -f1)
 lon1=$(echo "$latlon" | cut -d ' ' -f2)
@@ -53,14 +61,17 @@ if [ -f /home/pi-star/DN.txt ]; then
    line=$(head -n 1 /home/pi-star/DN.txt)
 	if [ "$line" == "$DN" ]; then
 		echo "No Change"
+#echo "$line:$DN"
 #		sudo mount -o remount,ro /
 		exit
 	fi
 fi
-   
-echo "$DN" >/home/pi-star/DN.txt
-sudo touch /var/log/pi-star/Nextion-Brightness-Adjusted.log
 sudo mount -o remount,rw /
+   
+echo "$DN" > /home/pi-star/DN.txt
+sudo touch /var/log/pi-star/Nextion-Brightness-Adjusted.log
+
+
 if [ "$DN" == "DAY" ]; then
         sudo sed -i '/^\[/h;G;/Nextion/s/\(Brightness=\).*/\1'"$daym"'/m;P;d'  /etc/mmdvmhost
         sudo sed -i '/^\[/h;G;/Nextion/s/\(IdleBrightness=\).*/\1'"$daym"'/m;P;d'  /etc/mmdvmhost
@@ -74,4 +85,4 @@ else
 fi
 sleep 2
 sudo mount -o remount,ro /
-sudo mmdvmhost.service restart &> null
+sudo mmdvmhost.service restart 
